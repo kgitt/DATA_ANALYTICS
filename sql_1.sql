@@ -3,7 +3,7 @@ films (
     name VARCHAR (355),
     id serial PRIMARY KEY,
     country VARCHAR (355),
-    box_office VARCHAR (355),
+    box_office INT,
     year VARCHAR (355)
     
 );
@@ -12,14 +12,11 @@ films (
 INSERT INTO
     films
 VALUES
-    (‘The Shawshank Redemption’, 0001, ‘USA’, ‘59841469’, ’1994’),
-    (‘The Green Mile ’, 0002, ‘USA’, ‘286801374’, ’1999’),
-    (‘Forrest Gump’, 0003, ‘USA’, ‘677386686’, ’1994’),
-    (‘Schindler's List’, 0004, ‘USA’, ‘321265768’, ’1993’),
-    (‘Intouchables’, 0005, ‘France’, ‘426588510’, ’2011’);
-
-
-
+    (‘The Shawshank Redemption’, 0001, ‘USA’, 59841469, ’1994’),
+    (‘The Green Mile ’, 0002, ‘USA’, 286801374, ’1999’),
+    (‘Forrest Gump’, 0003, ‘USA’, 677386686, ’1994’),
+    (‘Schindler's List’, 0004, ‘USA’, 321265768, ’1993’),
+    (‘Intouchables’, 0005, ‘France’, 426588510, ’2011’);
 
 
 CREATE TABLE
@@ -27,6 +24,7 @@ persons (
     name_surname VARCHAR (355),
     id serial PRIMARY KEY
 );
+
 
 
 
@@ -43,14 +41,16 @@ VALUES
 
 CREATE TABLE
 persons2content (
-    id_persons int,
-    id_content int,
+    id_persons INT,
+    id_content INT,
     person_type VARCHAR (355),
     FOREIGN KEY (id_persons)
     REFERENCES persons (id),
     FOREIGN KEY (id_content)
     REFERENCES films (id)
 );
+
+     
 
 
 INSERT INTO
