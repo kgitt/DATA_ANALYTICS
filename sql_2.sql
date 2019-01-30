@@ -52,3 +52,8 @@ SELECT userid, AVG(rating) b FROM ratings
 GROUP BY userid
 HAVING COUNT(*) > 10)
 SELECT AVG(b) FROM abc;
+
+
+
+
+
