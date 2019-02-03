@@ -22,65 +22,66 @@ ls $NETOLOGY_DATA/raw_data | grep keywords
 keywords1.csv
 keywords.csv                                                                                                              
                                                                                                                                                                                                                             
---Создаю таблицу ключевых слов
+--Создаю пустую таблицу ключевых слов
+                                                                                                              
   CREATE TABLE keywords (
-    movieId bigint,
+    movieid bigint,
     tags text
-  );'                                                                                                           
+  );                                                                                                    
                                                                                                               
---Копирую в нее csv
-                                                                                                              
-\copy keywords FROM 'NETOLOGY_DATA/raw_data/keywords.csv' DELIMITER' ',' CSV HEADER;                                                                                                             
+--Копирую в нее данные из keywords.csv
+                                                                                                           
+\copy keywords FROM '/usr/local/share/netology/raw_data/keywords.csv' DELIMITER ',' CSV HEADER;
+                                                                                                         
+--TRANSFORM делаем выборку 150 фильмов по заданным параметрам                                                                                                             
 
-                                                                                                              
---Transform                                                                                                              
---проверить? 
                                                                                                               
 SELECT movieId, AVG(rating) as avg_rating
 FROM ratings
 GROUP BY movieid
-HAVING COUNT(rating)>50
+HAVING COUNT(*)>50
 ORDER BY
 avg_rating DESC,
 movieId
 LIMIT 150;
                         
---присоединяем таблицу keywords
---проверить?
-                                                                                                              
- WITH top_rated AS (
+--тестово присоединяю таблицу keywords // использовал left join, но возможно, необходимо использовать inner join
+                                                                                                            
+WITH top_rated AS (
 SELECT movieId, AVG(rating) as avg_rating
 FROM ratings
 GROUP BY movieid
-HAVING COUNT(rating)>50
+HAVING COUNT(*)>50
 ORDER BY
 avg_rating DESC,
 movieId
 LIMIT 150
-)
---обозначить название новой колонки!                                                                                                              
+)                                            
 SELECT * FROM top_rated 
 LEFT JOIN keywords
-ON keywords.movied = top_rated.movieid                                                                                                             
+ON keywords.movieid = top_rated.movieid;                                                                                                             
                                                                                                               
---Load
+-- LOAD повторяю предыдущий запрос с определенными колонками и выгружаю выборку в таблицу top_rated_tags
  
-WITH top_rated as (
+WITH top_rated AS (
 SELECT movieId, AVG(rating) as avg_rating
 FROM ratings
 GROUP BY movieid
-HAVING COUNT(rating)>50
+HAVING COUNT(*)>50
 ORDER BY
 avg_rating DESC,
-movieId
-LIMIT 150)  
-                                                                                                              
-SELECT movieId, top_rated_tags INTO top_rated_tags 
+movieid
+LIMIT 150
+)                                                                                                            
+SELECT top_rated.movieid, tags as top_rated_tags INTO top_rated_tags 
 FROM top_rated 
 LEFT JOIN keywords
-ON keywords.movied = top_rated.movieid 
+ON keywords.movieid = top_rated.movieid; 
                                                                                                               
-LEFT JOIN keywords                                                                                                             
+                                                                                                         
+--Выгрузка данных из top_rated_tags. Не смог найти файл
+\copy (SELECT * FROM top_rated_tags) TO 'ratings_tags.csv' WITH CSV HEADER DELIMITER as ',';
+                                                                                                              
                                                                                                               
                                                                                                               
                                                                                                               
