@@ -45,7 +45,7 @@ avg_rating DESC,
 movieId
 LIMIT 150;
                         
---тестово присоединяю таблицу keywords // использовал left join, но возможно, необходимо использовать inner join
+--тестово присоединяю таблицу keywords 
                                                                                                             
 WITH top_rated AS (
 SELECT movieId, AVG(rating) as avg_rating
@@ -58,7 +58,7 @@ movieId
 LIMIT 150
 )                                            
 SELECT * FROM top_rated 
-LEFT JOIN keywords
+INNER JOIN keywords
 ON keywords.movieid = top_rated.movieid;                                                                                                             
                                                                                                               
 -- LOAD повторяю предыдущий запрос с определенными колонками и выгружаю выборку в таблицу top_rated_tags
@@ -75,7 +75,7 @@ LIMIT 150
 )                                                                                                            
 SELECT top_rated.movieid, tags as top_rated_tags INTO top_rated_tags 
 FROM top_rated 
-LEFT JOIN keywords
+INNER JOIN keywords
 ON keywords.movieid = top_rated.movieid; 
                                                                                                               
                                                                                                          
